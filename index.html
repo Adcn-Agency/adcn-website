@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root{--navy:#0D2D6E;--navy-dark:#071A44;--navy-mid:#1A4A9E;--gold:#C8A94A;--gold-light:#E8C96A;--white:#ffffff;--off-white:#F7F6F2;--text-dark:#1a1a2e;--text-muted:#6B7280;--border:rgba(13,45,110,0.1);--font-display:'Cormorant Garamond',Georgia,serif;--font-body:'DM Sans',sans-serif;}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -200,6 +199,28 @@ footer{background:var(--navy-dark);padding:60px 40px 0;}
 .modal-submit:disabled{opacity:0.6;cursor:not-allowed;}
 .modal-submit.gold{background:var(--gold);color:var(--navy-dark);}
 .modal-submit.gold:hover{background:var(--gold-light);}
+/* FILE UPLOAD */
+.file-upload-area{border:2px dashed rgba(255,255,255,0.2);border-radius:10px;padding:22px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;margin-bottom:0;}
+.file-upload-area:hover{border-color:rgba(200,169,74,0.5);background:rgba(200,169,74,0.04);}
+.file-upload-area.has-file{border-color:rgba(26,127,55,0.5);background:rgba(26,127,55,0.06);}
+.file-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.file-upload-icon{margin-bottom:8px;opacity:0.5;}
+.file-upload-area.has-file .file-upload-icon{opacity:1;}
+.file-upload-label{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5;}
+.file-upload-area.has-file .file-upload-label{color:rgba(255,255,255,0.85);}
+.file-upload-name{font-size:12px;color:var(--gold);margin-top:4px;font-weight:500;display:none;}
+.file-upload-area.has-file .file-upload-name{display:block;}
+/* Light version for modal */
+.file-upload-light{border:2px dashed var(--border);border-radius:10px;padding:22px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;margin-bottom:0;background:var(--off-white);}
+.file-upload-light:hover{border-color:var(--navy);background:rgba(13,45,110,0.03);}
+.file-upload-light.has-file{border-color:rgba(26,127,55,0.4);background:rgba(26,127,55,0.04);}
+.file-upload-light input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.file-upload-light .file-upload-label{font-size:13px;color:var(--text-muted);line-height:1.5;}
+.file-upload-light.has-file .file-upload-label{color:var(--text-dark);}
+.file-upload-light .file-upload-name{font-size:12px;color:#1a7f37;margin-top:4px;font-weight:500;display:none;}
+.file-upload-light.has-file .file-upload-name{display:block;}
+.file-note{font-size:11.5px;color:rgba(255,255,255,0.35);margin-top:8px;line-height:1.5;}
+.file-note-light{font-size:11.5px;color:var(--text-muted);margin-top:8px;line-height:1.5;}
 /* TOAST */
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);padding:14px 28px;border-radius:10px;font-size:14px;font-weight:500;z-index:3000;opacity:0;transition:all 0.35s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -214,6 +235,110 @@ span[data-lang].active{display:inline;}
 /* REVEAL */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease;}
 .reveal.visible{opacity:1;transform:none;}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+  /* LANG BAR */
+  .lang-bar{padding:6px 16px;}
+
+  /* NAV */
+  nav{padding:0 16px;height:60px;position:relative;}
+  .nav-wordmark-sub{display:none;}
+  .nav-wordmark-main{font-size:17px;}
+  .nav-logo-icon{width:34px;height:34px;}
+  .logo-ring{width:34px;height:34px;}
+  .logo-n{font-size:22px;}
+  .nav-links{display:none;}
+  .nav-cta{display:none;}
+  /* Hamburger */
+  .hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:transparent;z-index:300;}
+  .hamburger span{width:24px;height:2px;background:rgba(255,255,255,0.8);border-radius:2px;transition:all 0.3s;display:block;}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburger.open span:nth-child(2){opacity:0;}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  /* Mobile menu */
+  .mobile-menu{display:none;position:fixed;inset:0;background:var(--navy-dark);z-index:250;flex-direction:column;align-items:center;justify-content:center;gap:0;}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:22px;font-family:var(--font-display);font-weight:500;padding:18px 0;width:100%;text-align:center;border-bottom:0.5px solid rgba(255,255,255,0.07);transition:color 0.2s;}
+  .mobile-menu a:hover{color:var(--gold);}
+  .mobile-menu .mobile-cta{margin-top:24px;background:var(--gold);color:var(--navy-dark);border:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;font-family:var(--font-body);width:80%;}
+
+  /* HERO */
+  .hero{padding:50px 20px 50px;flex-direction:column;gap:36px;min-height:auto;text-align:center;}
+  .hero h1{font-size:34px;}
+  .hero-desc{font-size:15px;max-width:100%;margin-bottom:24px;}
+  .hero-btns{justify-content:center;gap:10px;}
+  .btn-gold,.btn-ghost{padding:11px 22px;font-size:14px;}
+  .hero-logo{flex:none;width:100%;}
+  .hero-logo-ring-outer{width:160px;height:160px;}
+  .hero-logo-inner{width:110px;height:110px;}
+  .hero-logo-n{font-size:48px;}
+  .hero-logo-text{font-size:14px;}
+
+  /* STATS */
+  .stats-bar{grid-template-columns:repeat(2,1fr);padding:20px 16px;gap:0;}
+  .stat-item{padding:12px 8px;border-right:none;border-bottom:1px solid var(--border);}
+  .stat-item:nth-child(odd){border-right:1px solid var(--border);}
+  .stat-item:nth-child(3),.stat-item:nth-child(4){border-bottom:none;}
+  .stat-num{font-size:28px;}
+
+  /* SECTIONS */
+  .section{padding:50px 20px;}
+
+  /* SECTION TITLES */
+  .section-title{font-size:28px;}
+
+  /* SERVICES */
+  .services-grid{grid-template-columns:1fr;gap:14px;}
+  .service-card{padding:20px;}
+
+  /* ABOUT */
+  .about-grid{grid-template-columns:1fr;gap:36px;}
+  .values-grid{grid-template-columns:1fr 1fr;gap:12px;}
+  .value-item{padding:16px;}
+
+  /* CARRIERES */
+  .carrieres-section{padding:50px 20px;}
+  .offres-grid{grid-template-columns:1fr;gap:14px;}
+  .candidature-box{grid-template-columns:1fr;gap:28px;padding:24px 20px;border-radius:12px;}
+  .candidature-text h3{font-size:22px;}
+  .admin-bar{flex-direction:column;align-items:flex-start;gap:10px;padding:12px 16px;}
+
+  /* CONTACT */
+  .contact-section{padding:50px 20px;}
+  .contact-grid{grid-template-columns:1fr;gap:28px;}
+  .devis-box{padding:24px 20px;}
+  .devis-box h3{font-size:20px;}
+
+  /* FOOTER */
+  footer{padding:40px 20px 0;}
+  .footer-grid{grid-template-columns:1fr;gap:32px;padding-bottom:32px;}
+  .footer-brand .footer-logo-text{font-size:22px;}
+  .nl-input-wrap{flex-direction:column;}
+  .nl-btn{width:100%;padding:12px;}
+
+  /* MODAL */
+  .modal-box{padding:24px 20px;width:95%;border-radius:12px;}
+  .modal-box h2{font-size:22px;}
+
+  /* WA FAB */
+  .wa-fab{bottom:20px;right:16px;width:50px;height:50px;}
+
+  /* TOAST */
+  .toast{width:90%;white-space:normal;text-align:center;font-size:13px;}
+
+  /* HERO BADGE */
+  .hero-badge{font-size:10px;padding:5px 12px;}
+}
+
+@media (max-width: 480px) {
+  .hero h1{font-size:28px;}
+  .values-grid{grid-template-columns:1fr;}
+  .offre-actions{flex-direction:column;}
+  .offre-btn,.offre-btn-edit,.offre-btn-del{width:100%;text-align:center;}
+  .section-title{font-size:24px;}
+  .hero-badge{display:none;}
+}
 </style>
 </head>
 <body>
@@ -246,7 +371,20 @@ span[data-lang].active{display:inline;}
   <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
     <span data-lang="fr">Demander un devis</span><span data-lang="en">Get a quote</span><span data-lang="es">Solicitar presupuesto</span>
   </button>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#accueil" onclick="closeMenu()">Accueil</a>
+  <a href="#services" onclick="closeMenu()">Services</a>
+  <a href="#apropos" onclick="closeMenu()">À propos</a>
+  <a href="#carrieres" onclick="closeMenu()">Carrières</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <button class="mobile-cta" onclick="closeMenu();document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Demander un devis</button>
+</div>
 
 <section class="hero" id="accueil">
   <div class="hero-text">
@@ -364,7 +502,17 @@ span[data-lang].active{display:inline;}
       <div class="f-row f-light"><label>Email *</label><input type="email" id="cs_email" placeholder="votre@email.com"/></div>
       <div class="f-row f-light"><label>Téléphone</label><input type="tel" id="cs_tel" placeholder="+229 ..."/></div>
       <div class="f-row f-light"><label>Poste visé *</label><input type="text" id="cs_poste" placeholder="Ex: Commercial terrain, Chef des ventes..."/></div>
-      <div class="f-row f-light"><label>Message de motivation</label><textarea id="cs_message" rows="4" placeholder="Présentez-vous et expliquez votre motivation..."></textarea></div>
+      <div class="f-row f-light"><label>Message de motivation</label><textarea id="cs_message" rows="3" placeholder="Présentez-vous et expliquez votre motivation..."></textarea></div>
+      <div class="f-row">
+        <label style="color:rgba(255,255,255,0.6);font-size:12.5px;letter-spacing:0.5px;margin-bottom:7px;display:block;">CV (PDF, Word — max 5 Mo)</label>
+        <div class="file-upload-area" id="cvCSZone" onclick="document.getElementById('cs_cv').click()">
+          <input type="file" id="cs_cv" accept=".pdf,.doc,.docx" style="display:none;" onchange="handleFileCS(this)"/>
+          <div class="file-upload-icon"><svg width="28" height="28" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <div class="file-upload-label">Cliquez pour sélectionner votre CV</div>
+          <div class="file-upload-name" id="cs_cv_name"></div>
+        </div>
+        <div class="file-note">⚠ Le CV sera joint automatiquement à votre email via votre application mail</div>
+      </div>
       <button class="submit-btn" id="btnCS" onclick="envoyerCandidature()">Envoyer ma candidature →</button>
     </div>
   </div>
@@ -492,7 +640,17 @@ span[data-lang].active{display:inline;}
     <div class="modal-row"><label>Nom & Prénom *</label><input type="text" id="p_nom" placeholder="Votre nom complet"/></div>
     <div class="modal-row"><label>Email *</label><input type="email" id="p_email" placeholder="votre@email.com"/></div>
     <div class="modal-row"><label>Téléphone</label><input type="tel" id="p_tel" placeholder="+229 ..."/></div>
-    <div class="modal-row"><label>Lettre de motivation</label><textarea id="p_motivation" rows="4" placeholder="Pourquoi ce poste vous correspond..."></textarea></div>
+    <div class="modal-row"><label>Lettre de motivation</label><textarea id="p_motivation" rows="3" placeholder="Pourquoi ce poste vous correspond..."></textarea></div>
+    <div class="modal-row">
+      <label>CV (PDF, Word — max 5 Mo)</label>
+      <div class="file-upload-light" id="cvPostZone" onclick="document.getElementById('p_cv').click()">
+        <input type="file" id="p_cv" accept=".pdf,.doc,.docx" style="display:none;" onchange="handleFilePost(this)"/>
+        <div class="file-upload-icon"><svg width="28" height="28" fill="none" stroke="#6B7280" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+        <div class="file-upload-label">Cliquez pour sélectionner votre CV</div>
+        <div class="file-upload-name" id="p_cv_name"></div>
+      </div>
+      <div class="file-note-light">⚠ Le CV sera joint automatiquement à votre email via votre application mail</div>
+    </div>
     <button class="modal-submit gold" id="btnPostuler" onclick="envoyerPostulation()">Envoyer ma candidature →</button>
   </div>
 </div>
@@ -528,10 +686,8 @@ span[data-lang].active{display:inline;}
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== EMAILJS INIT =====
-emailjs.init('6gPq3eqtcFXHlAXaR');
-const EJS_SERVICE = 'service_kjywfbg';
-const EJS_TEMPLATE = 'template_wufrthk';
+// ===== FORMSPREE =====
+const FORMSPREE_URL = 'https://formspree.io/f/xpqkbgnz';
 
 // ===== LANGUE =====
 let currentLang = 'fr';
@@ -560,9 +716,20 @@ function showToast(msg, type='success') {
   setTimeout(()=>t.classList.remove('show'), 4500);
 }
 
-// ===== EMAILJS SEND =====
-async function sendEmail(params) {
-  return emailjs.send(EJS_SERVICE, EJS_TEMPLATE, params);
+// ===== FORMSPREE SEND =====
+async function sendEmail(sujet, nom, email, telephone, message) {
+  const res = await fetch(FORMSPREE_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify({
+      _subject: sujet,
+      Nom: nom,
+      Email: email,
+      Telephone: telephone || 'Non renseigné',
+      Message: message
+    })
+  });
+  if (!res.ok) throw new Error('Erreur ' + res.status);
 }
 
 // ===== ENVOI DEVIS =====
@@ -577,13 +744,11 @@ async function envoyerDevis() {
   const btn = document.getElementById('btnDevis');
   btn.disabled = true; btn.textContent = 'Envoi en cours...';
   try {
-    await sendEmail({
-      sujet: 'Demande de devis — ' + service,
-      nom: nom,
-      email_expediteur: email,
-      telephone: tel || 'Non renseigné',
-      message: 'Entreprise: ' + (entreprise||'Non renseignée') + '\nService: ' + service + '\n\n' + message
-    });
+    await sendEmail(
+      'Demande de devis — ' + service,
+      nom, email, tel,
+      'Entreprise: ' + (entreprise||'Non renseignée') + '\nService: ' + service + '\n\n' + message
+    );
     showToast('✓ Demande de devis envoyée à adcnegociation@gmail.com !');
     document.getElementById('d_nom').value='';
     document.getElementById('d_email').value='';
@@ -592,10 +757,38 @@ async function envoyerDevis() {
     document.getElementById('d_service').value='';
     document.getElementById('d_message').value='';
   } catch(e) {
-    showToast('Erreur d\'envoi. Contactez-nous directement par email.','error');
+    showToast("Erreur d'envoi. Contactez-nous directement par email.","error");
     console.error(e);
   }
   btn.disabled = false; btn.textContent = 'Envoyer la demande →';
+}
+
+// ===== GESTION FICHIERS CV =====
+function handleFileCS(input) {
+  const file = input.files[0];
+  const zone = document.getElementById('cvCSZone');
+  const nameEl = document.getElementById('cs_cv_name');
+  if(file) {
+    if(file.size > 5*1024*1024){showToast('Fichier trop volumineux (max 5 Mo)','error');input.value='';return;}
+    zone.classList.add('has-file');
+    nameEl.textContent = '📎 ' + file.name;
+    // Update icon color
+    zone.querySelector('svg').setAttribute('stroke','rgba(200,169,74,0.8)');
+  }
+}
+function handleFilePost(input) {
+  const file = input.files[0];
+  const zone = document.getElementById('cvPostZone');
+  const nameEl = document.getElementById('p_cv_name');
+  if(file) {
+    if(file.size > 5*1024*1024){showToast('Fichier trop volumineux (max 5 Mo)','error');input.value='';return;}
+    zone.classList.add('has-file');
+    nameEl.textContent = '📎 ' + file.name;
+    zone.querySelector('svg').setAttribute('stroke','#1a7f37');
+  }
+}
+function buildMailtoCV(to, subject, body) {
+  return 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
 
 // ===== ENVOI CANDIDATURE SPONTANEE =====
@@ -605,25 +798,35 @@ async function envoyerCandidature() {
   const tel = document.getElementById('cs_tel').value.trim();
   const poste = document.getElementById('cs_poste').value.trim();
   const message = document.getElementById('cs_message').value.trim();
+  const cvFile = document.getElementById('cs_cv').files[0];
   if(!nom||!email||!poste){showToast('Veuillez remplir les champs obligatoires (*)','error');return;}
   const btn = document.getElementById('btnCS');
   btn.disabled=true; btn.textContent='Envoi en cours...';
   try {
-    await sendEmail({
-      sujet: 'Candidature spontanée — ' + poste,
-      nom: nom,
-      email_expediteur: email,
-      telephone: tel||'Non renseigné',
-      message: 'Poste visé: ' + poste + '\n\n' + (message||'Pas de message complémentaire.')
-    });
-    showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
+    // Send notification via Formspree (without file)
+    await sendEmail(
+      'Candidature spontanée — ' + poste,
+      nom, email, tel,
+      'Poste visé: ' + poste + '\n' + (cvFile ? 'CV joint: ' + cvFile.name : 'Pas de CV joint') + '\n\n' + (message||'Pas de message complémentaire.')
+    );
+    // If CV attached, open mailto to send with attachment
+    if(cvFile) {
+      const mailBody = 'Bonjour,\n\nJe vous adresse ma candidature spontanée pour le poste de: ' + poste + '\n\nNom: ' + nom + '\nEmail: ' + email + '\nTél: ' + (tel||'Non renseigné') + '\n\n' + (message||'') + '\n\nMon CV est joint à cet email.\n\nCordialement,\n' + nom;
+      showToast("✓ Notification envoyée ! Votre application mail va s'ouvrir pour joindre le CV.","success");
+      setTimeout(()=>{ window.location.href = buildMailtoCV('adcnegociation@gmail.com','Candidature spontanée — '+poste+' — '+nom, mailBody); },1500);
+    } else {
+      showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
+    }
     document.getElementById('cs_nom').value='';
     document.getElementById('cs_email').value='';
     document.getElementById('cs_tel').value='';
     document.getElementById('cs_poste').value='';
     document.getElementById('cs_message').value='';
+    document.getElementById('cs_cv').value='';
+    document.getElementById('cvCSZone').classList.remove('has-file');
+    document.getElementById('cs_cv_name').textContent='';
   } catch(e) {
-    showToast('Erreur d\'envoi. Contactez-nous directement par email.','error');
+    showToast("Erreur d'envoi. Contactez-nous directement par email.","error");
   }
   btn.disabled=false; btn.textContent='Envoyer ma candidature →';
 }
@@ -633,17 +836,15 @@ async function envoyerNewsletter() {
   const email = document.getElementById('nl_email').value.trim();
   if(!email||!email.includes('@')){showToast('Veuillez entrer un email valide','error');return;}
   try {
-    await sendEmail({
-      sujet: 'Inscription Newsletter ADCN',
-      nom: 'Abonnement Newsletter',
-      email_expediteur: email,
-      telephone: '—',
-      message: 'Nouvelle inscription à la newsletter ADCN.\nEmail: ' + email
-    });
+    await sendEmail(
+      'Inscription Newsletter ADCN',
+      'Abonnement Newsletter', email, '—',
+      'Nouvelle inscription à la newsletter ADCN.\nEmail: ' + email
+    );
     showToast('✓ Inscription newsletter confirmée !');
     document.getElementById('nl_email').value='';
   } catch(e) {
-    showToast('Erreur d\'envoi. Réessayez plus tard.','error');
+    showToast("Erreur d'envoi. Réessayez plus tard.","error");
   }
 }
 
@@ -654,25 +855,33 @@ async function envoyerPostulation() {
   const email = document.getElementById('p_email').value.trim();
   const tel = document.getElementById('p_tel').value.trim();
   const motivation = document.getElementById('p_motivation').value.trim();
+  const cvFile = document.getElementById('p_cv').files[0];
   if(!nom||!email){showToast('Nom et email obligatoires','error');return;}
   const btn = document.getElementById('btnPostuler');
   btn.disabled=true; btn.textContent='Envoi en cours...';
   try {
-    await sendEmail({
-      sujet: 'Candidature — ' + currentOffreTitle,
-      nom: nom,
-      email_expediteur: email,
-      telephone: tel||'Non renseigné',
-      message: 'Poste: ' + currentOffreTitle + '\n\n' + (motivation||'Pas de lettre de motivation.')
-    });
-    showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
+    await sendEmail(
+      'Candidature — ' + currentOffreTitle,
+      nom, email, tel,
+      'Poste: ' + currentOffreTitle + '\n' + (cvFile ? 'CV joint: ' + cvFile.name : 'Pas de CV joint') + '\n\n' + (motivation||'Pas de lettre de motivation.')
+    );
+    if(cvFile) {
+      const mailBody = 'Bonjour,\n\nJe postule au poste: ' + currentOffreTitle + '\n\nNom: ' + nom + '\nEmail: ' + email + '\nTél: ' + (tel||'Non renseigné') + '\n\n' + (motivation||'') + '\n\nMon CV est joint à cet email.\n\nCordialement,\n' + nom;
+      showToast("✓ Notification envoyée ! Votre application mail va s'ouvrir pour joindre le CV.","success");
+      setTimeout(()=>{ window.location.href = buildMailtoCV('adcnegociation@gmail.com','Candidature — '+currentOffreTitle+' — '+nom, mailBody); },1500);
+    } else {
+      showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
+    }
     closeModal('modalPostuler');
     document.getElementById('p_nom').value='';
     document.getElementById('p_email').value='';
     document.getElementById('p_tel').value='';
     document.getElementById('p_motivation').value='';
+    document.getElementById('p_cv').value='';
+    document.getElementById('cvPostZone').classList.remove('has-file');
+    document.getElementById('p_cv_name').textContent='';
   } catch(e) {
-    showToast('Erreur d\'envoi. Contactez-nous par email.','error');
+    showToast("Erreur d'envoi. Contactez-nous par email.","error");
   }
   btn.disabled=false; btn.textContent='Envoyer ma candidature →';
 }
@@ -759,7 +968,7 @@ function editOffre(id) {
   const o = offres.find(x=>x.id===id);
   if(!o) return;
   editingId = id;
-  document.getElementById('modalPublierTitle').textContent = 'Modifier l\'offre';
+  document.getElementById('modalPublierTitle').textContent = "Modifier l'offre";
   document.getElementById('modalPublierSub').textContent = 'Modifiez les informations puis sauvegardez';
   document.getElementById('o_titre').value = o.titre;
   document.getElementById('o_type').value = o.type;
@@ -770,7 +979,7 @@ function editOffre(id) {
 }
 
 function supprimerOffre(id) {
-  if(!confirm('Supprimer cette offre d\'emploi ?')) return;
+  if(!confirm("Supprimer cette offre d'emploi ?")) return;
   offres = offres.filter(x=>x.id!==id);
   saveOffres();
   renderOffres();
@@ -789,7 +998,7 @@ function sauvegarderOffre() {
     editingId=null;
     document.getElementById('modalPublierTitle').textContent='Publier une offre';
     document.getElementById('modalPublierSub').textContent='Les offres sont visibles immédiatement sur le site';
-    document.getElementById('btnPublier').textContent='Publier l\'offre →';
+    document.getElementById('btnPublier').textContent="Publier l'offre →";
     showToast('✓ Offre modifiée avec succès');
   } else {
     offres.unshift({id:Date.now(),titre,type,lieu,desc});
@@ -813,6 +1022,20 @@ const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
 },{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ===== HAMBURGER MENU =====
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const ham = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  ham.classList.toggle('open');
+  document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+}
+function closeMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
 </script>
 </body>
 </html>
