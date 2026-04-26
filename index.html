@@ -774,8 +774,45 @@ span[data-lang].active{display:inline;}
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== FORMSPREE =====
-const FORMSPREE_URL = 'https://formspree.io/f/xpqkbgnz';
+// ===== WEB3FORMS — texte + pièces jointes CV =====
+const W3F_KEY = 'a37b6137-b4fe-45f4-9b69-256d80d0eee6';
+
+// Envoi texte seul (devis, newsletter)
+async function sendEmail(sujet, nom, email, telephone, message) {
+  const formData = new FormData();
+  formData.append('access_key', W3F_KEY);
+  formData.append('subject', sujet + ' — ADCN');
+  formData.append('from_name', 'Site ADCN');
+  formData.append('Nom', nom);
+  formData.append('Email', email);
+  formData.append('Telephone', telephone || 'Non renseigné');
+  formData.append('Message', message);
+  const res = await fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    body: formData
+  });
+  const data = await res.json();
+  if (!data.success) throw new Error(data.message || 'Erreur envoi');
+}
+
+// Envoi avec CV en vraie pièce jointe
+async function sendEmailWithCV(sujet, nom, email, telephone, message, cvFile) {
+  const formData = new FormData();
+  formData.append('access_key', W3F_KEY);
+  formData.append('subject', sujet + ' — ADCN');
+  formData.append('from_name', nom + ' via Site ADCN');
+  formData.append('Nom', nom);
+  formData.append('Email', email);
+  formData.append('Telephone', telephone || 'Non renseigné');
+  formData.append('Message', message);
+  formData.append('attachment', cvFile, cvFile.name);
+  const res = await fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    body: formData
+  });
+  const data = await res.json();
+  if (!data.success) throw new Error(data.message || 'Erreur envoi');
+}
 
 // ===== LANGUE =====
 let currentLang = 'fr';
@@ -875,9 +912,7 @@ function handleFilePost(input) {
     zone.querySelector('svg').setAttribute('stroke','#1a7f37');
   }
 }
-function buildMailtoCV(to, subject, body) {
-  return 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-}
+
 
 // ===== ENVOI CANDIDATURE SPONTANEE =====
 async function envoyerCandidature() {
@@ -891,20 +926,13 @@ async function envoyerCandidature() {
   const btn = document.getElementById('btnCS');
   btn.disabled=true; btn.textContent='Envoi en cours...';
   try {
-    // Send notification via Formspree (without file)
-    await sendEmail(
-      'Candidature spontanée — ' + poste,
-      nom, email, tel,
-      'Poste visé: ' + poste + '\n' + (cvFile ? 'CV joint: ' + cvFile.name : 'Pas de CV joint') + '\n\n' + (message||'Pas de message complémentaire.')
-    );
-    // If CV attached, open mailto to send with attachment
+    const msgBody = 'Poste visé: ' + poste + '\n\n' + (message||'Pas de message complémentaire.');
     if(cvFile) {
-      const mailBody = 'Bonjour,\n\nJe vous adresse ma candidature spontanée pour le poste de: ' + poste + '\n\nNom: ' + nom + '\nEmail: ' + email + '\nTél: ' + (tel||'Non renseigné') + '\n\n' + (message||'') + '\n\nMon CV est joint à cet email.\n\nCordialement,\n' + nom;
-      showToast("✓ Notification envoyée ! Votre application mail va s'ouvrir pour joindre le CV.","success");
-      setTimeout(()=>{ window.location.href = buildMailtoCV('adcnegociation@gmail.com','Candidature spontanée — '+poste+' — '+nom, mailBody); },1500);
+      await sendEmailWithCV('Candidature spontanée — ' + poste, nom, email, tel, msgBody, cvFile);
     } else {
-      showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
+      await sendEmail('Candidature spontanée — ' + poste, nom, email, tel, msgBody);
     }
+    showToast('✓ Candidature envoyée avec succès à adcnegociation@gmail.com !');
     document.getElementById('cs_nom').value='';
     document.getElementById('cs_email').value='';
     document.getElementById('cs_tel').value='';
@@ -948,18 +976,13 @@ async function envoyerPostulation() {
   const btn = document.getElementById('btnPostuler');
   btn.disabled=true; btn.textContent='Envoi en cours...';
   try {
-    await sendEmail(
-      'Candidature — ' + currentOffreTitle,
-      nom, email, tel,
-      'Poste: ' + currentOffreTitle + '\n' + (cvFile ? 'CV joint: ' + cvFile.name : 'Pas de CV joint') + '\n\n' + (motivation||'Pas de lettre de motivation.')
-    );
+    const msgBody = 'Poste: ' + currentOffreTitle + '\n\n' + (motivation||'Pas de lettre de motivation.');
     if(cvFile) {
-      const mailBody = 'Bonjour,\n\nJe postule au poste: ' + currentOffreTitle + '\n\nNom: ' + nom + '\nEmail: ' + email + '\nTél: ' + (tel||'Non renseigné') + '\n\n' + (motivation||'') + '\n\nMon CV est joint à cet email.\n\nCordialement,\n' + nom;
-      showToast("✓ Notification envoyée ! Votre application mail va s'ouvrir pour joindre le CV.","success");
-      setTimeout(()=>{ window.location.href = buildMailtoCV('adcnegociation@gmail.com','Candidature — '+currentOffreTitle+' — '+nom, mailBody); },1500);
+      await sendEmailWithCV('Candidature — ' + currentOffreTitle, nom, email, tel, msgBody, cvFile);
     } else {
-      showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
+      await sendEmail('Candidature — ' + currentOffreTitle, nom, email, tel, msgBody);
     }
+    showToast('✓ Candidature envoyée avec succès à adcnegociation@gmail.com !');
     closeModal('modalPostuler');
     document.getElementById('p_nom').value='';
     document.getElementById('p_email').value='';
