@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>ADCN — Agence de Développement Commercial et de Négociation</title>
 <meta name="description" content="ADCN, votre partenaire en développement commercial, recrutement, placement, audit et formation d'équipes commerciales."/>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
@@ -251,14 +252,14 @@ span[data-lang].active{display:inline;}
   .nav-links{display:none;}
   .nav-cta{display:none;}
   /* Hamburger */
-  .hamburger{display:flex;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:transparent;z-index:300;}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:transparent;z-index:300;}
   .hamburger span{width:24px;height:2px;background:rgba(255,255,255,0.8);border-radius:2px;transition:all 0.3s;display:block;}
   .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
   .hamburger.open span:nth-child(2){opacity:0;}
   .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
   /* Mobile menu */
-  .mobile-menu{display:none;position:fixed;inset:0;background:var(--navy-dark);z-index:250;flex-direction:column;align-items:center;justify-content:center;gap:0;}
-  .mobile-menu.open{display:flex;}
+  .mobile-menu{display:none !important;position:fixed;inset:0;background:var(--navy-dark);z-index:250;flex-direction:column;align-items:center;justify-content:center;gap:0;}
+  .mobile-menu.open{display:flex !important;}
   .mobile-menu a{color:rgba(255,255,255,0.8);text-decoration:none;font-size:22px;font-family:var(--font-display);font-weight:500;padding:18px 0;width:100%;text-align:center;border-bottom:0.5px solid rgba(255,255,255,0.07);transition:color 0.2s;}
   .mobile-menu a:hover{color:var(--gold);}
   .mobile-menu .mobile-cta{margin-top:24px;background:var(--gold);color:var(--navy-dark);border:none;padding:14px 40px;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;font-family:var(--font-body);width:80%;}
@@ -475,7 +476,7 @@ span[data-lang].active{display:inline;}
   <div class="section-header reveal">
     <div class="section-eyebrow"><span data-lang="fr">Carrières</span><span data-lang="en">Careers</span><span data-lang="es">Carreras</span></div>
     <div class="section-title"><span data-lang="fr">Recrutement <em style="font-style:normal;color:var(--gold)">en cours</em></span><span data-lang="en">Recruitment <em style="font-style:normal;color:var(--gold)">in progress</em></span><span data-lang="es">Reclutamiento <em style="font-style:normal;color:var(--gold)">en curso</em></span></div>
-    <div class="section-sub"><span data-lang="fr">Nous recrutons des talents passionnés par le développement commercial et la négociation.</span><span data-lang="en">We recruit talents passionate about commercial development and negotiation.</span><span data-lang="es">Reclutamos talentos apasionados por el desarrollo comercial.</span></div>
+    <div class="section-sub"><span data-lang="fr">Nous recrutons des talents ambitieux, déterminés à s'investir pleinement dans la croissance de nos partenaires et à créer de la valeur à chaque étape.</span><span data-lang="en">We recruit ambitious talents, determined to fully invest in the growth of our partners and create value at every step.</span><span data-lang="es">Reclutamos talentos ambiciosos, decididos a invertir plenamente en el crecimiento de nuestros socios.</span></div>
   </div>
   <div class="admin-bar" id="adminBar">
     <span class="admin-bar-label">Mode administrateur actif</span>
@@ -490,7 +491,7 @@ span[data-lang].active{display:inline;}
   <div class="candidature-box reveal">
     <div class="candidature-text">
       <h3>Candidature spontanée</h3>
-      <p>Vous ne trouvez pas d'offre correspondant à votre profil ? Envoyez-nous votre candidature ! Nous sommes toujours à la recherche de talents commerciaux exceptionnels.</p>
+      <p>Vous ne trouvez pas d'offre correspondant à votre profil ? Envoyez-nous votre candidature ! Nous sommes toujours à la recherche de talents exceptionnels.</p>
       <div class="candidature-perks">
         <div class="perk-item"><div class="perk-dot"></div>CV étudié dans les 72h</div>
         <div class="perk-item"><div class="perk-dot"></div>Réponse garantie</div>
@@ -503,16 +504,6 @@ span[data-lang].active{display:inline;}
       <div class="f-row f-light"><label>Téléphone</label><input type="tel" id="cs_tel" placeholder="+229 ..."/></div>
       <div class="f-row f-light"><label>Poste visé *</label><input type="text" id="cs_poste" placeholder="Ex: Commercial terrain, Chef des ventes..."/></div>
       <div class="f-row f-light"><label>Message de motivation</label><textarea id="cs_message" rows="3" placeholder="Présentez-vous et expliquez votre motivation..."></textarea></div>
-      <div class="f-row">
-        <label style="color:rgba(255,255,255,0.6);font-size:12.5px;letter-spacing:0.5px;margin-bottom:7px;display:block;">CV (PDF, Word — max 5 Mo)</label>
-        <div class="file-upload-area" id="cvCSZone" onclick="document.getElementById('cs_cv').click()">
-          <input type="file" id="cs_cv" accept=".pdf,.doc,.docx" style="display:none;" onchange="handleFileCS(this)"/>
-          <div class="file-upload-icon"><svg width="28" height="28" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-          <div class="file-upload-label">Cliquez pour sélectionner votre CV</div>
-          <div class="file-upload-name" id="cs_cv_name"></div>
-        </div>
-        <div class="file-note">⚠ Le CV sera joint automatiquement à votre email via votre application mail</div>
-      </div>
       <button class="submit-btn" id="btnCS" onclick="envoyerCandidature()">Envoyer ma candidature →</button>
     </div>
   </div>
@@ -641,16 +632,6 @@ span[data-lang].active{display:inline;}
     <div class="modal-row"><label>Email *</label><input type="email" id="p_email" placeholder="votre@email.com"/></div>
     <div class="modal-row"><label>Téléphone</label><input type="tel" id="p_tel" placeholder="+229 ..."/></div>
     <div class="modal-row"><label>Lettre de motivation</label><textarea id="p_motivation" rows="3" placeholder="Pourquoi ce poste vous correspond..."></textarea></div>
-    <div class="modal-row">
-      <label>CV (PDF, Word — max 5 Mo)</label>
-      <div class="file-upload-light" id="cvPostZone" onclick="document.getElementById('p_cv').click()">
-        <input type="file" id="p_cv" accept=".pdf,.doc,.docx" style="display:none;" onchange="handleFilePost(this)"/>
-        <div class="file-upload-icon"><svg width="28" height="28" fill="none" stroke="#6B7280" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-        <div class="file-upload-label">Cliquez pour sélectionner votre CV</div>
-        <div class="file-upload-name" id="p_cv_name"></div>
-      </div>
-      <div class="file-note-light">⚠ Le CV sera joint automatiquement à votre email via votre application mail</div>
-    </div>
     <button class="modal-submit gold" id="btnPostuler" onclick="envoyerPostulation()">Envoyer ma candidature →</button>
   </div>
 </div>
@@ -726,20 +707,21 @@ function showToast(msg, type='success') {
   setTimeout(()=>t.classList.remove('show'), 4500);
 }
 
-function sendEmail(sujet, nom, email, telephone, message) {
-  const dest = 'adcnegociation@gmail.com';
-  const subject = encodeURIComponent(sujet + ' — ADCN');
-  const body = encodeURIComponent(
-    'Nom : ' + nom + '\n' +
-    'Email : ' + email + '\n' +
-    'Téléphone : ' + (telephone || 'Non renseigné') + '\n\n' +
-    message
-  );
-  window.location.href = 'mailto:' + dest + '?subject=' + subject + '&body=' + body;
+// ===== EMAILJS INIT =====
+emailjs.init('6gPq3eqtcFXHlAXaR');
+
+async function sendEmail(sujet, nom, email, telephone, message) {
+  return emailjs.send('service_kjywfbg', 'template_wufrthk', {
+    sujet:            sujet,
+    nom:              nom,
+    email_expediteur: email,
+    telephone:        telephone || 'Non renseigné',
+    message:          message
+  });
 }
 
 // ===== ENVOI DEVIS =====
-function envoyerDevis() {
+async function envoyerDevis() {
   const nom = document.getElementById('d_nom').value.trim();
   const email = document.getElementById('d_email').value.trim();
   const tel = document.getElementById('d_tel').value.trim();
@@ -747,101 +729,106 @@ function envoyerDevis() {
   const service = document.getElementById('d_service').value;
   const message = document.getElementById('d_message').value.trim();
   if(!nom||!email||!service||!message){showToast('Veuillez remplir tous les champs obligatoires (*)','error');return;}
-  sendEmail(
-    'Demande de devis — ' + service,
-    nom, email, tel,
-    'Entreprise: ' + (entreprise||'Non renseignée') + '\nService: ' + service + '\n\n' + message
-  );
-  showToast('✓ Gmail va ouvrir avec votre demande pré-remplie !');
-  document.getElementById('d_nom').value='';
-  document.getElementById('d_email').value='';
-  document.getElementById('d_tel').value='';
-  document.getElementById('d_entreprise').value='';
-  document.getElementById('d_service').value='';
-  document.getElementById('d_message').value='';
+  const btn = document.getElementById('btnDevis');
+  btn.disabled=true; btn.textContent='Envoi en cours...';
+  try {
+    await sendEmail(
+      'Demande de devis — ' + service,
+      nom, email, tel,
+      'Entreprise: ' + (entreprise||'Non renseignée') + '\nService: ' + service + '\n\n' + message
+    );
+    showToast('✓ Demande envoyée à adcnegociation@gmail.com !');
+    document.getElementById('d_nom').value='';
+    document.getElementById('d_email').value='';
+    document.getElementById('d_tel').value='';
+    document.getElementById('d_entreprise').value='';
+    document.getElementById('d_service').value='';
+    document.getElementById('d_message').value='';
+  } catch(e) {
+    showToast('Erreur envoi : ' + e.message, 'error');
+    console.error(e);
+  }
+  btn.disabled=false; btn.textContent='Envoyer la demande →';
 }
 
 // ===== GESTION FICHIERS CV =====
-function handleFileCS(input) {
-  const file = input.files[0];
-  const zone = document.getElementById('cvCSZone');
-  const nameEl = document.getElementById('cs_cv_name');
-  if(file) {
-    if(file.size > 5*1024*1024){showToast('Fichier trop volumineux (max 5 Mo)','error');input.value='';return;}
-    zone.classList.add('has-file');
-    nameEl.textContent = '📎 ' + file.name;
-    // Update icon color
-    zone.querySelector('svg').setAttribute('stroke','rgba(200,169,74,0.8)');
-  }
-}
-function handleFilePost(input) {
-  const file = input.files[0];
-  const zone = document.getElementById('cvPostZone');
-  const nameEl = document.getElementById('p_cv_name');
-  if(file) {
-    if(file.size > 5*1024*1024){showToast('Fichier trop volumineux (max 5 Mo)','error');input.value='';return;}
-    zone.classList.add('has-file');
-    nameEl.textContent = '📎 ' + file.name;
-    zone.querySelector('svg').setAttribute('stroke','#1a7f37');
-  }
-}
 function buildMailtoCV(to, subject, body) {
   return 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
 
 // ===== ENVOI CANDIDATURE SPONTANEE =====
-function envoyerCandidature() {
+async function envoyerCandidature() {
   const nom = document.getElementById('cs_nom').value.trim();
   const email = document.getElementById('cs_email').value.trim();
   const tel = document.getElementById('cs_tel').value.trim();
   const poste = document.getElementById('cs_poste').value.trim();
   const message = document.getElementById('cs_message').value.trim();
   if(!nom||!email||!poste){showToast('Veuillez remplir les champs obligatoires (*)','error');return;}
-  sendEmail(
-    'Candidature spontanée — ' + poste,
-    nom, email, tel,
-    'Poste visé : ' + poste + '\n\n' + (message||'Pas de message complémentaire.')
-  );
-  showToast('✓ Gmail va ouvrir avec votre candidature pré-remplie !');
-  document.getElementById('cs_nom').value='';
-  document.getElementById('cs_email').value='';
-  document.getElementById('cs_tel').value='';
-  document.getElementById('cs_poste').value='';
-  document.getElementById('cs_message').value='';
+  const btn = document.getElementById('btnCS');
+  btn.disabled=true; btn.textContent='Envoi en cours...';
+  try {
+    await sendEmail(
+      'Candidature spontanée — ' + poste,
+      nom, email, tel,
+      'Poste visé : ' + poste + '\n\n' + (message||'Pas de message complémentaire.')
+    );
+    showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
+    document.getElementById('cs_nom').value='';
+    document.getElementById('cs_email').value='';
+    document.getElementById('cs_tel').value='';
+    document.getElementById('cs_poste').value='';
+    document.getElementById('cs_message').value='';
+  } catch(e) {
+    showToast('Erreur envoi : ' + e.message, 'error');
+    console.error(e);
+  }
+  btn.disabled=false; btn.textContent='Envoyer ma candidature →';
 }
 
 
 // ===== NEWSLETTER =====
-function envoyerNewsletter() {
+async function envoyerNewsletter() {
   const email = document.getElementById('nl_email').value.trim();
   if(!email||!email.includes('@')){showToast('Veuillez entrer un email valide','error');return;}
-  sendEmail(
-    'Inscription Newsletter ADCN',
-    'Abonnement Newsletter', email, '—',
-    'Nouvelle inscription à la newsletter ADCN.\nEmail : ' + email
-  );
-  showToast('✓ Gmail va ouvrir pour confirmer votre inscription !');
-  document.getElementById('nl_email').value='';
+  try {
+    await sendEmail(
+      'Inscription Newsletter ADCN',
+      'Abonnement Newsletter', email, '—',
+      'Nouvelle inscription à la newsletter ADCN.\nEmail : ' + email
+    );
+    showToast('✓ Inscription newsletter confirmée !');
+    document.getElementById('nl_email').value='';
+  } catch(e) {
+    showToast('Erreur envoi : ' + e.message, 'error');
+  }
 }
 // ===== POSTULATION OFFRE =====
 let currentOffreTitle = '';
-function envoyerPostulation() {
+async function envoyerPostulation() {
   const nom = document.getElementById('p_nom').value.trim();
   const email = document.getElementById('p_email').value.trim();
   const tel = document.getElementById('p_tel').value.trim();
   const motivation = document.getElementById('p_motivation').value.trim();
   if(!nom||!email){showToast('Nom et email obligatoires','error');return;}
-  sendEmail(
-    'Candidature — ' + currentOffreTitle,
-    nom, email, tel,
-    'Poste : ' + currentOffreTitle + '\n\n' + (motivation||'Pas de lettre de motivation.')
-  );
-  showToast('✓ Gmail va ouvrir avec votre candidature pré-remplie !');
-  closeModal('modalPostuler');
-  document.getElementById('p_nom').value='';
-  document.getElementById('p_email').value='';
-  document.getElementById('p_tel').value='';
-  document.getElementById('p_motivation').value='';
+  const btn = document.getElementById('btnPostuler');
+  btn.disabled=true; btn.textContent='Envoi en cours...';
+  try {
+    await sendEmail(
+      'Candidature — ' + currentOffreTitle,
+      nom, email, tel,
+      'Poste : ' + currentOffreTitle + '\n\n' + (motivation||'Pas de lettre de motivation.')
+    );
+    showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
+    closeModal('modalPostuler');
+    document.getElementById('p_nom').value='';
+    document.getElementById('p_email').value='';
+    document.getElementById('p_tel').value='';
+    document.getElementById('p_motivation').value='';
+  } catch(e) {
+    showToast('Erreur envoi : ' + e.message, 'error');
+    console.error(e);
+  }
+  btn.disabled=false; btn.textContent='Envoyer ma candidature →';
 }
 // ===== ADMIN =====
 const ADMIN_PWD = 'adcn2025';
