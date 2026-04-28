@@ -474,7 +474,7 @@ span[data-lang].active{display:inline;}
 <section class="carrieres-section section-alt" id="carrieres">
   <div class="section-header reveal">
     <div class="section-eyebrow"><span data-lang="fr">Carrières</span><span data-lang="en">Careers</span><span data-lang="es">Carreras</span></div>
-    <div class="section-title"><span data-lang="fr">Rejoignez l'équipe <em style="font-style:normal;color:var(--gold)">ADCN</em></span><span data-lang="en">Join the <em style="font-style:normal;color:var(--gold)">ADCN</em> team</span><span data-lang="es">Únase al equipo <em style="font-style:normal;color:var(--gold)">ADCN</em></span></div>
+    <div class="section-title"><span data-lang="fr">Recrutement <em style="font-style:normal;color:var(--gold)">en cours</em></span><span data-lang="en">Recruitment <em style="font-style:normal;color:var(--gold)">in progress</em></span><span data-lang="es">Reclutamiento <em style="font-style:normal;color:var(--gold)">en curso</em></span></div>
     <div class="section-sub"><span data-lang="fr">Nous recrutons des talents passionnés par le développement commercial et la négociation.</span><span data-lang="en">We recruit talents passionate about commercial development and negotiation.</span><span data-lang="es">Reclutamos talentos apasionados por el desarrollo comercial.</span></div>
   </div>
   <div class="admin-bar" id="adminBar">
@@ -686,8 +686,18 @@ span[data-lang].active{display:inline;}
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== FORMSPREE =====
-const FORMSPREE_URL = 'https://formspree.io/f/xpqkbgnz';
+// ===== MODALS =====
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
+});
+
+// ===== ENVOI MAILTO =====
 
 // ===== LANGUE =====
 let currentLang = 'fr';
@@ -716,24 +726,20 @@ function showToast(msg, type='success') {
   setTimeout(()=>t.classList.remove('show'), 4500);
 }
 
-// ===== FORMSPREE SEND =====
-async function sendEmail(sujet, nom, email, telephone, message) {
-  const res = await fetch(FORMSPREE_URL, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-    body: JSON.stringify({
-      _subject: sujet,
-      Nom: nom,
-      Email: email,
-      Telephone: telephone || 'Non renseigné',
-      Message: message
-    })
-  });
-  if (!res.ok) throw new Error('Erreur ' + res.status);
+function sendEmail(sujet, nom, email, telephone, message) {
+  const dest = 'adcnegociation@gmail.com';
+  const subject = encodeURIComponent(sujet + ' — ADCN');
+  const body = encodeURIComponent(
+    'Nom : ' + nom + '\n' +
+    'Email : ' + email + '\n' +
+    'Téléphone : ' + (telephone || 'Non renseigné') + '\n\n' +
+    message
+  );
+  window.location.href = 'mailto:' + dest + '?subject=' + subject + '&body=' + body;
 }
 
 // ===== ENVOI DEVIS =====
-async function envoyerDevis() {
+function envoyerDevis() {
   const nom = document.getElementById('d_nom').value.trim();
   const email = document.getElementById('d_email').value.trim();
   const tel = document.getElementById('d_tel').value.trim();
@@ -741,26 +747,18 @@ async function envoyerDevis() {
   const service = document.getElementById('d_service').value;
   const message = document.getElementById('d_message').value.trim();
   if(!nom||!email||!service||!message){showToast('Veuillez remplir tous les champs obligatoires (*)','error');return;}
-  const btn = document.getElementById('btnDevis');
-  btn.disabled = true; btn.textContent = 'Envoi en cours...';
-  try {
-    await sendEmail(
-      'Demande de devis — ' + service,
-      nom, email, tel,
-      'Entreprise: ' + (entreprise||'Non renseignée') + '\nService: ' + service + '\n\n' + message
-    );
-    showToast('✓ Demande de devis envoyée à adcnegociation@gmail.com !');
-    document.getElementById('d_nom').value='';
-    document.getElementById('d_email').value='';
-    document.getElementById('d_tel').value='';
-    document.getElementById('d_entreprise').value='';
-    document.getElementById('d_service').value='';
-    document.getElementById('d_message').value='';
-  } catch(e) {
-    showToast("Erreur d'envoi. Contactez-nous directement par email.","error");
-    console.error(e);
-  }
-  btn.disabled = false; btn.textContent = 'Envoyer la demande →';
+  sendEmail(
+    'Demande de devis — ' + service,
+    nom, email, tel,
+    'Entreprise: ' + (entreprise||'Non renseignée') + '\nService: ' + service + '\n\n' + message
+  );
+  showToast('✓ Gmail va ouvrir avec votre demande pré-remplie !');
+  document.getElementById('d_nom').value='';
+  document.getElementById('d_email').value='';
+  document.getElementById('d_tel').value='';
+  document.getElementById('d_entreprise').value='';
+  document.getElementById('d_service').value='';
+  document.getElementById('d_message').value='';
 }
 
 // ===== GESTION FICHIERS CV =====
@@ -792,107 +790,59 @@ function buildMailtoCV(to, subject, body) {
 }
 
 // ===== ENVOI CANDIDATURE SPONTANEE =====
-async function envoyerCandidature() {
+function envoyerCandidature() {
   const nom = document.getElementById('cs_nom').value.trim();
   const email = document.getElementById('cs_email').value.trim();
   const tel = document.getElementById('cs_tel').value.trim();
   const poste = document.getElementById('cs_poste').value.trim();
   const message = document.getElementById('cs_message').value.trim();
-  const cvFile = document.getElementById('cs_cv').files[0];
   if(!nom||!email||!poste){showToast('Veuillez remplir les champs obligatoires (*)','error');return;}
-  const btn = document.getElementById('btnCS');
-  btn.disabled=true; btn.textContent='Envoi en cours...';
-  try {
-    // Send notification via Formspree (without file)
-    await sendEmail(
-      'Candidature spontanée — ' + poste,
-      nom, email, tel,
-      'Poste visé: ' + poste + '\n' + (cvFile ? 'CV joint: ' + cvFile.name : 'Pas de CV joint') + '\n\n' + (message||'Pas de message complémentaire.')
-    );
-    // If CV attached, open mailto to send with attachment
-    if(cvFile) {
-      const mailBody = 'Bonjour,\n\nJe vous adresse ma candidature spontanée pour le poste de: ' + poste + '\n\nNom: ' + nom + '\nEmail: ' + email + '\nTél: ' + (tel||'Non renseigné') + '\n\n' + (message||'') + '\n\nMon CV est joint à cet email.\n\nCordialement,\n' + nom;
-      showToast("✓ Notification envoyée ! Votre application mail va s'ouvrir pour joindre le CV.","success");
-      setTimeout(()=>{ window.location.href = buildMailtoCV('adcnegociation@gmail.com','Candidature spontanée — '+poste+' — '+nom, mailBody); },1500);
-    } else {
-      showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
-    }
-    document.getElementById('cs_nom').value='';
-    document.getElementById('cs_email').value='';
-    document.getElementById('cs_tel').value='';
-    document.getElementById('cs_poste').value='';
-    document.getElementById('cs_message').value='';
-    document.getElementById('cs_cv').value='';
-    document.getElementById('cvCSZone').classList.remove('has-file');
-    document.getElementById('cs_cv_name').textContent='';
-  } catch(e) {
-    showToast("Erreur d'envoi. Contactez-nous directement par email.","error");
-  }
-  btn.disabled=false; btn.textContent='Envoyer ma candidature →';
+  sendEmail(
+    'Candidature spontanée — ' + poste,
+    nom, email, tel,
+    'Poste visé : ' + poste + '\n\n' + (message||'Pas de message complémentaire.')
+  );
+  showToast('✓ Gmail va ouvrir avec votre candidature pré-remplie !');
+  document.getElementById('cs_nom').value='';
+  document.getElementById('cs_email').value='';
+  document.getElementById('cs_tel').value='';
+  document.getElementById('cs_poste').value='';
+  document.getElementById('cs_message').value='';
 }
+
 
 // ===== NEWSLETTER =====
-async function envoyerNewsletter() {
+function envoyerNewsletter() {
   const email = document.getElementById('nl_email').value.trim();
   if(!email||!email.includes('@')){showToast('Veuillez entrer un email valide','error');return;}
-  try {
-    await sendEmail(
-      'Inscription Newsletter ADCN',
-      'Abonnement Newsletter', email, '—',
-      'Nouvelle inscription à la newsletter ADCN.\nEmail: ' + email
-    );
-    showToast('✓ Inscription newsletter confirmée !');
-    document.getElementById('nl_email').value='';
-  } catch(e) {
-    showToast("Erreur d'envoi. Réessayez plus tard.","error");
-  }
+  sendEmail(
+    'Inscription Newsletter ADCN',
+    'Abonnement Newsletter', email, '—',
+    'Nouvelle inscription à la newsletter ADCN.\nEmail : ' + email
+  );
+  showToast('✓ Gmail va ouvrir pour confirmer votre inscription !');
+  document.getElementById('nl_email').value='';
 }
-
 // ===== POSTULATION OFFRE =====
 let currentOffreTitle = '';
-async function envoyerPostulation() {
+function envoyerPostulation() {
   const nom = document.getElementById('p_nom').value.trim();
   const email = document.getElementById('p_email').value.trim();
   const tel = document.getElementById('p_tel').value.trim();
   const motivation = document.getElementById('p_motivation').value.trim();
-  const cvFile = document.getElementById('p_cv').files[0];
   if(!nom||!email){showToast('Nom et email obligatoires','error');return;}
-  const btn = document.getElementById('btnPostuler');
-  btn.disabled=true; btn.textContent='Envoi en cours...';
-  try {
-    await sendEmail(
-      'Candidature — ' + currentOffreTitle,
-      nom, email, tel,
-      'Poste: ' + currentOffreTitle + '\n' + (cvFile ? 'CV joint: ' + cvFile.name : 'Pas de CV joint') + '\n\n' + (motivation||'Pas de lettre de motivation.')
-    );
-    if(cvFile) {
-      const mailBody = 'Bonjour,\n\nJe postule au poste: ' + currentOffreTitle + '\n\nNom: ' + nom + '\nEmail: ' + email + '\nTél: ' + (tel||'Non renseigné') + '\n\n' + (motivation||'') + '\n\nMon CV est joint à cet email.\n\nCordialement,\n' + nom;
-      showToast("✓ Notification envoyée ! Votre application mail va s'ouvrir pour joindre le CV.","success");
-      setTimeout(()=>{ window.location.href = buildMailtoCV('adcnegociation@gmail.com','Candidature — '+currentOffreTitle+' — '+nom, mailBody); },1500);
-    } else {
-      showToast('✓ Candidature envoyée à adcnegociation@gmail.com !');
-    }
-    closeModal('modalPostuler');
-    document.getElementById('p_nom').value='';
-    document.getElementById('p_email').value='';
-    document.getElementById('p_tel').value='';
-    document.getElementById('p_motivation').value='';
-    document.getElementById('p_cv').value='';
-    document.getElementById('cvPostZone').classList.remove('has-file');
-    document.getElementById('p_cv_name').textContent='';
-  } catch(e) {
-    showToast("Erreur d'envoi. Contactez-nous par email.","error");
-  }
-  btn.disabled=false; btn.textContent='Envoyer ma candidature →';
+  sendEmail(
+    'Candidature — ' + currentOffreTitle,
+    nom, email, tel,
+    'Poste : ' + currentOffreTitle + '\n\n' + (motivation||'Pas de lettre de motivation.')
+  );
+  showToast('✓ Gmail va ouvrir avec votre candidature pré-remplie !');
+  closeModal('modalPostuler');
+  document.getElementById('p_nom').value='';
+  document.getElementById('p_email').value='';
+  document.getElementById('p_tel').value='';
+  document.getElementById('p_motivation').value='';
 }
-
-// ===== MODALS =====
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(m=>{
-  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
-});
-
 // ===== ADMIN =====
 const ADMIN_PWD = 'adcn2025';
 let isAdmin = false;
